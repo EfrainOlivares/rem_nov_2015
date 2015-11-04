@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Array as Data</title>
+    <link rel="stylesheet" type="text/css" href="../../css/styles.css"/>
+    <script type="text/javascript" src="http://d3js.org/d3.v3.min.js"></script>
+    <script type="text/javascript" src="https://code.jquery.com/jquery-2.1.4.js"></script>
+    <script>
+      function loadXMLDoc()
+      {
+        var xmlhttp;
+        var jsontxt;
+        if (window.XMLHttpRequest)
+          {// code for IE7+, Firefox, Chrome, Opera, Safari
+          xmlhttp=new XMLHttpRequest();
+          }
+        else
+          {// code for IE6, IE5
+          xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
+          }
+        xmlhttp.onreadystatechange=function()
+          {
+          if (xmlhttp.readyState==4 && xmlhttp.status==200)
+            {
+
+              jsontxt = xmlhttp.responseText;
+              document.getElementById("myDiv").innerHTML = jsontxt;
+            }
+          }
+        xmlhttp.open("GET","http://173.255.114.32:8080/api/python?pretty=true",true);
+        xmlhttp.send();
+        console.log("fff",jsontxt); 
+        return jsontxt;
+      }
+      function loadjson()
+      {
+        //$.ajax({url: "http://173.255.114.32:8080/api/python?pretty=true"}).then(function(response){
+        //  console.log("AAA", response)
+        //});
+        return $.ajax({url: "http://173.255.114.32:8080/api/python?pretty=true", async: false}).responseText
+      }
+    </script>
+</head>
+
+<body>
+<div id="myDiv"><h2>Let AJAX change this text</h2></div>
+<button type="button" onclick="loadXMLDoc()">Change Content</button>
+
+
+<!-- d3-cookbook chapter 3 -->
+<script type="text/javascript">
+    var data = [10, 15, 30, 50, 80, 65, 55, 30, 20, 10, 8]; // <- A
+    function render(data) { // <- B
+        //parsedjson = loadXMLDoc();
+        parsedjson = loadjson();
+        console.log(parsedjson); 
+ 
+        // Enter
+        d3.select("body").selectAll("div.h-bar") // <- C
+            .data(data) // <- D
+            .enter() // <- E
+                .append("div") // <- F
+                    .attr("class", "h-bar")
+                .append("span"); // <- G
+
+        // Update
+        d3.select("body").selectAll("div.h-bar")
+            .data(data) 
+                .style("width", function (d) { // <- H
+                    return (d * 3) + "px";
+                })
+                .select("span") // <- I
+                    .text(function (d) {
+                        return d;
+                    });
+                
+        // Exit
+        d3.select("body").selectAll("div.h-bar")
+            .data(data)
+            .exit() // <- J
+                .remove();        
+    }
+
+    setInterval(function () { // <- K
+        data.shift();
+        data.push(Math.round(Math.random() * 100));
+        render(data);
+    }, 1500);
+
+    render(data);
+</script>
+
+</body>
+
+</html>
