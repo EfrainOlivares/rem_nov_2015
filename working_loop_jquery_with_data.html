@@ -3,7 +3,6 @@
 <head>
     <meta charset="utf-8">
     <title>Array as Data</title>
-    <link rel="stylesheet" type="text/css" href="../../css/styles.css"/>
     <script type="text/javascript" src="http://d3js.org/d3.v3.min.js"></script>
     <script type="text/javascript" src="https://code.jquery.com/jquery-2.1.4.js"></script>
     <script>
@@ -12,7 +11,7 @@
         //$.ajax({url: "http://173.255.114.32:8080/api/python?pretty=true"}).then(function(response){
         //  console.log("AAA", response)
         //});
-        return $.ajax({url: "http://104.154.75.139:8080/api/json?pretty=true", async: false}).responseText
+        return $.ajax({url: "http://niarferious.niarfe.net:8080/api/python?pretty=true", async: false}).responseText
       }
     </script>
 </head>
@@ -37,29 +36,24 @@
         }
         data = jobsarray;
         // Enter
-        d3.select("body").selectAll("div.h-bar") // <- C
+        d3.select("body").selectAll("p") // <- C
             .data(data) // <- D
             .enter() // <- E
-                .append("div") // <- F
-                    .attr("class", "h-bar")
-                .append("span"); // <- G
+            .append("p");
 
         // Update
-        d3.select("body").selectAll("div.h-bar")
+        d3.select("body").selectAll("p")
             .data(data) 
-                .style("width", function (d) { // <- H
-                    return (d * 3) + "px";
-                })
-                .select("span") // <- I
-                    .text(function (d) {
-                        return d;
-                    });
+         //   .select("p") // <- I
+            .text(function (d) {
+               return d;
+            });
                 
         // Exit
-        d3.select("body").selectAll("div.h-bar")
+        d3.select("body").selectAll("p")
             .data(data)
             .exit() // <- J
-                .remove();        
+            .remove();        
     }
 
     setInterval(function () { // <- K
