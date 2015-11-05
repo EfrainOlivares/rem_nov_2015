@@ -1,0 +1,65 @@
+<!doctype html>
+<meta charset="utf-8">
+
+<script src="http://www.d3plus.org/js/d3.js"></script>
+<script src="http://www.d3plus.org/js/d3plus.js"></script>
+
+<div id="viz"></div>
+
+<script>
+  var json_url = "http://104.154.75.139:8080/api/json?pretty=true";
+
+  var data = [];
+  d3.json(json_url, function(error, json) {
+    if (error) return console.warn(error);
+    console.log("Sucessfully loaded json");
+    data = json["jobs"];
+  })
+
+  
+  var sample_data = [
+    {"value": 100, "name": "alpha", "group": "group 1"},
+    {"value": 70, "name": "beta", "group": "group 2"},
+    {"value": 40, "name": "gamma", "group": "group 2"},
+    {"value": 15, "name": "delta", "group": "group 2"},
+    {"value": 5, "name": "epsilon", "group": "group 1"},
+    {"value": 1, "name": "zeta", "group": "group 1"}
+  ]
+
+  var data2 = []
+
+  var aws_pass = 0;
+  var gce_pass = 0;
+  var ost_pass = 0;
+  var vsc_pass = 0;
+  
+  for (i = 0; i < data.length; i++) {
+    if ((i["name"].match(/AWS/)) && (i["color"].match(/blue/))) {
+      aws_pass++;
+    } else if ((i["name"].match(/GCE/)) && (i["color"].match(/blue/))) {
+      gce_pass++;
+    } else if ((i["name"].match(/OST/)) && (i["color"].match(/blue/))) {
+      ost_pass++;
+    } else ((i["name"].match(/VSC/)) && (i["color"].match(/blue/))) {
+    vsc_pass++;
+    }
+  }
+
+  var data2 = [
+    {"value": aws_pass, "name": "Amazon", "group": "group 1"},
+    {"value": gce_pass, "name": "Google", "group": "group 2"},
+    {"value": ost_pass, "name": "OST Juno", "group": "group 2"},
+    {"value": vsc_pass, "name": "VScale v5.5", "group": "group 2"}
+  ]
+
+  var visualization = d3plus.viz()
+    .container("#viz")
+    .data(data2)
+    .type("tree_map")
+    //.id(["group","name"])
+    //.id("name")
+    .depth(1)
+    .size("value")
+    .draw()
+
+</script>
