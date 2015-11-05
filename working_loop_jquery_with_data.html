@@ -45,6 +45,14 @@
         d3.select("body").selectAll("p")
             .data(data) 
          //   .select("p") // <- I
+            .style("color", function(c) {
+                if (c.match(/two/)) {
+                  return "blue"
+                } else {
+                  return "red"
+                }
+                  ;
+                })
             .text(function (d) {
                return d;
             });
