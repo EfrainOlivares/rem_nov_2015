@@ -5,6 +5,7 @@
     <title>Array as Data</title>
     <script type="text/javascript" src="http://d3js.org/d3.v3.min.js"></script>
     <script type="text/javascript" src="https://code.jquery.com/jquery-2.1.4.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/3.10.1/lodash.js"></script>
     <script>
       function loadjson()
       {
@@ -28,23 +29,22 @@
         parsedjson = JSON.parse(loadjson());
         
         jobs_list = parsedjson["jobs"];
-        
+        console.log("Starting job length is: " + jobs_list.length);        
         // Kick out destroyer jobs
-        for (i = 0; i < jobs_list.length; i++) {
-          if (jobs_list[i]["name"].match(/^Z/)) {
-            jobs_list.splice(i,1);
-          } 
-        }
+        new_jobs_list = _.reject(jobs_list, function(i) {
+          return i["name"].match(/^Z|000|^update_/);
+        }); 
+        console.log("Final jobs length is: " + new_jobs_list.length);
          
         // Enter
         d3.select("body").selectAll("p") // <- C
-            .data(jobs_list) // <- D
+            .data(new_jobs_list) // <- D
             .enter() // <- E
             .append("p");
 
         // Update
         d3.select("body").selectAll("p")
-            .data(jobs_list) 
+            .data(new_jobs_list) 
          //   .select("p") // <- I
             .style("color", function(c) {
                 if (c["color"].match(/blue/)) {
@@ -61,7 +61,7 @@
                 
         // Exit
         d3.select("body").selectAll("p")
-            .data(jobs_list)
+            .data(new_jobs_list)
             .exit() // <- J
             .remove();        
     }
@@ -70,7 +70,7 @@
         data.shift();
         data.push(Math.round(Math.random() * 100));
         render(data);
-    }, 5000);
+    }, 2500);
 
     render(data);
 </script>
