@@ -2,39 +2,30 @@
 <html>
 <head>
     <meta charset="utf-8">
-    <title>Array as Data</title>
+    <title>AJAX comes to RocketMonkey</title>
     <script type="text/javascript" src="http://d3js.org/d3.v3.min.js"></script>
     <script type="text/javascript" src="https://code.jquery.com/jquery-2.1.4.js"></script>
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/3.10.1/lodash.js"></script>
     <script>
       function loadjson()
       {
-        //$.ajax({url: "http://173.255.114.32:8080/api/python?pretty=true"}).then(function(response){
-        //  console.log("AAA", response)
-        //});
-        return $.ajax({url: "http://104.154.75.139:8080/api/json?pretty=true", async: false}).responseText
+        return $.ajax({url: "http://rem2015.efrain.biz:8080/api/json?pretty=true", async: false}).responseText
       }
     </script>
 </head>
 
 <body>
-<div id="myDiv"><h2>Let AJAX change this text</h2></div>
-<button type="button" onclick="loadjson()">Change Content</button>
-
-
-<!-- d3-cookbook chapter 3 -->
 <script type="text/javascript">
-    var data = [10, 15, 30, 50, 80, 65, 55, 30, 20, 10, 8]; // <- A
-    function render(data) { // <- B
+    function render() {
         parsedjson = JSON.parse(loadjson());
         
         jobs_list = parsedjson["jobs"];
-        console.log("Starting job length is: " + jobs_list.length);        
+        //console.log("Starting job length is: " + jobs_list.length);        
         // Kick out destroyer jobs
         new_jobs_list = _.reject(jobs_list, function(i) {
           return i["name"].match(/^Z|000|^update_/);
         }); 
-        console.log("Final jobs length is: " + new_jobs_list.length);
+        //console.log("Final jobs length is: " + new_jobs_list.length);
          
         // Enter
         d3.select("body").selectAll("div") // <- C
@@ -45,14 +36,13 @@
         // Update
         d3.select("body").selectAll("div")
             .data(new_jobs_list) 
-         //   .select("div") // <- I
             .style("color", function(c) {
                 if (c["color"].match(/blue/)) {
                   return "blue";
                 } else if (c["color"].match(/red/)) {
                   return "red";
                 } else {
-                  return "yellow";
+                  return "black";
                 }
             })
             .attr("width", "400px")
@@ -78,13 +68,11 @@
             .remove();        
     }
 
-    setInterval(function () { // <- K
-        data.shift();
-        data.push(Math.round(Math.random() * 100));
-        render(data);
+    setInterval(function () {
+        render();
     }, 2500);
 
-    render(data);
+    render();
 </script>
 
 </body>
