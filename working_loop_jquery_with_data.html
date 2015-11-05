@@ -37,15 +37,15 @@
         console.log("Final jobs length is: " + new_jobs_list.length);
          
         // Enter
-        d3.select("body").selectAll("p") // <- C
+        d3.select("body").selectAll("div") // <- C
             .data(new_jobs_list) // <- D
             .enter() // <- E
-            .append("p");
+            .append("div");
 
         // Update
-        d3.select("body").selectAll("p")
+        d3.select("body").selectAll("div")
             .data(new_jobs_list) 
-         //   .select("p") // <- I
+         //   .select("div") // <- I
             .style("color", function(c) {
                 if (c["color"].match(/blue/)) {
                   return "blue";
@@ -55,12 +55,24 @@
                   return "yellow";
                 }
             })
+            .attr("width", "400px")
             .text(function (d) {
                return d["name"];
-            });
-                
+            })
+            .append("img")
+              .attr("src", function(m) {
+                if(m["color"].match(/blue/)) {
+                  return "../rocketmonkey/images/Passed.png";
+                } else if (m["color"].match(/red/)) {
+                  return "../rocketmonkey/images/server_template_failure.png";
+                } else {
+                  return "../rocketmonkey/images/NotRunYet.png";
+                }
+               })
+              .attr("width", "24px")
+              .attr("height", "24px"); 
         // Exit
-        d3.select("body").selectAll("p")
+        d3.select("body").selectAll("div")
             .data(new_jobs_list)
             .exit() // <- J
             .remove();        
