@@ -7,55 +7,35 @@
     <script type="text/javascript" src="http://d3js.org/d3.v3.min.js"></script>
     <script type="text/javascript" src="https://code.jquery.com/jquery-2.1.4.js"></script>
     <script>
-      function loadXMLDoc()
-      {
-        var xmlhttp;
-        var jsontxt;
-        if (window.XMLHttpRequest)
-          {// code for IE7+, Firefox, Chrome, Opera, Safari
-          xmlhttp=new XMLHttpRequest();
-          }
-        else
-          {// code for IE6, IE5
-          xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
-          }
-        xmlhttp.onreadystatechange=function()
-          {
-          if (xmlhttp.readyState==4 && xmlhttp.status==200)
-            {
-
-              jsontxt = xmlhttp.responseText;
-              document.getElementById("myDiv").innerHTML = jsontxt;
-            }
-          }
-        xmlhttp.open("GET","http://173.255.114.32:8080/api/python?pretty=true",true);
-        xmlhttp.send();
-        console.log("fff",jsontxt); 
-        return jsontxt;
-      }
       function loadjson()
       {
         //$.ajax({url: "http://173.255.114.32:8080/api/python?pretty=true"}).then(function(response){
         //  console.log("AAA", response)
         //});
-        return $.ajax({url: "http://173.255.114.32:8080/api/python?pretty=true", async: false}).responseText
+        return $.ajax({url: "http://104.154.75.139:8080/api/json?pretty=true", async: false}).responseText
       }
     </script>
 </head>
 
 <body>
 <div id="myDiv"><h2>Let AJAX change this text</h2></div>
-<button type="button" onclick="loadXMLDoc()">Change Content</button>
+<button type="button" onclick="loadjson()">Change Content</button>
 
 
 <!-- d3-cookbook chapter 3 -->
 <script type="text/javascript">
     var data = [10, 15, 30, 50, 80, 65, 55, 30, 20, 10, 8]; // <- A
     function render(data) { // <- B
-        //parsedjson = loadXMLDoc();
         parsedjson = loadjson();
         console.log(parsedjson); 
- 
+        parsedjson = JSON.parse(loadjson());
+        
+        jobsarray = []
+        for (i = 0; i < parsedjson["jobs"].length; i++) {
+          console.log(parsedjson["jobs"][i]["name"] + "         " + parsedjson["jobs"][i]["color"]);
+          jobsarray.push(parsedjson["jobs"][i]["name"] + "         " + parsedjson["jobs"][i]["color"]);
+        }
+        data = jobsarray;
         // Enter
         d3.select("body").selectAll("div.h-bar") // <- C
             .data(data) // <- D
@@ -86,7 +66,7 @@
         data.shift();
         data.push(Math.round(Math.random() * 100));
         render(data);
-    }, 1500);
+    }, 5000);
 
     render(data);
 </script>
