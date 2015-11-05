@@ -11,7 +11,7 @@
         //$.ajax({url: "http://173.255.114.32:8080/api/python?pretty=true"}).then(function(response){
         //  console.log("AAA", response)
         //});
-        return $.ajax({url: "http://niarferious.niarfe.net:8080/api/json?pretty=true", async: false}).responseText
+        return $.ajax({url: "http://104.154.75.139:8080/api/json?pretty=true", async: false}).responseText
       }
     </script>
 </head>
@@ -25,41 +25,43 @@
 <script type="text/javascript">
     var data = [10, 15, 30, 50, 80, 65, 55, 30, 20, 10, 8]; // <- A
     function render(data) { // <- B
-        parsedjson = loadjson();
-        console.log(parsedjson); 
         parsedjson = JSON.parse(loadjson());
         
-        jobsarray = []
-        for (i = 0; i < parsedjson["jobs"].length; i++) {
-          console.log(parsedjson["jobs"][i]["name"] + "         " + parsedjson["jobs"][i]["color"]);
-          jobsarray.push(parsedjson["jobs"][i]["name"] + "         " + parsedjson["jobs"][i]["color"]);
+        jobs_list = parsedjson["jobs"];
+        
+        // Kick out destroyer jobs
+        for (i = 0; i < jobs_list.length; i++) {
+          if (jobs_list[i]["name"].match(/^Z/)) {
+            jobs_list.splice(i,1);
+          } 
         }
-        data = jobsarray;
+         
         // Enter
         d3.select("body").selectAll("p") // <- C
-            .data(data) // <- D
+            .data(jobs_list) // <- D
             .enter() // <- E
             .append("p");
 
         // Update
         d3.select("body").selectAll("p")
-            .data(data) 
+            .data(jobs_list) 
          //   .select("p") // <- I
             .style("color", function(c) {
-                if (c.match(/two/)) {
-                  return "blue"
+                if (c["color"].match(/blue/)) {
+                  return "blue";
+                } else if (c["color"].match(/red/)) {
+                  return "red";
                 } else {
-                  return "red"
+                  return "yellow";
                 }
-                  ;
-                })
+            })
             .text(function (d) {
-               return d;
+               return d["name"];
             });
                 
         // Exit
         d3.select("body").selectAll("p")
-            .data(data)
+            .data(jobs_list)
             .exit() // <- J
             .remove();        
     }
