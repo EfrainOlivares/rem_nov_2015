@@ -25,28 +25,43 @@
 </head>
 
 <body>
-<div id="container"></div>
+<div id="container">
+  <table>
+    <thead>
+      <tr>
+      </tr>
+    </thead>
+    <tbody>
+    </tbody>
+  </table>
+</div>
+
 <script type="text/javascript">
+
+    var listdata = ["one","two","three","four","five","six"]
     function render() {
         parsedjson = JSON.parse(loadjson());
         jobs_list = parsedjson["jobs"];
         new_jobs_list = remove_destroyers(jobs_list);
 
 // CODE HERE vv
+        firstname = new Date().toLocaleString()
         // create some people
-        var people = [
-            {name: "Jill", age: 30},
-            {name: "Bob", age: 32},
-            {name: "George", age: 29},
-            {name: "Sally", age: 31}
-        ];
-        var peopleTable = tabulate(people, ["name", "age"]);
+//        var people = [
+//            {name: firstname, age: 30},
+//            {name: "Bob", age: 32}
+//        ];
+//        var peopleTable = tabulate(people, ["name", "age"]);
 
+        list(listdata);
 
     } // end render function
 
 
+
     setInterval(function () {
+        listdata.push("another");
+        listdata.splice(1,1)
         render();
     }, 2500);
 

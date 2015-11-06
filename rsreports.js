@@ -7,35 +7,64 @@ function remove_destroyers(jobs_list) {
 } 
 
 function tabulate(data, columns) {
-    console.log(data);
-    var table = d3.select("#container").append("table"),
-        thead = table.append("thead"),
-        tbody = table.append("tbody");
 
     // append the header row
-    thead.append("tr")
+    d3.select("#container").select("table").select("thead").select("tr")
         .selectAll("th")
         .data(columns)
         .enter()
         .append("th")
-            .text(function(column) { return column; });
+        .text(function(column) { return column; });
 
     // create a row for each object in the data
-    var rows = tbody.selectAll("tr")
+    d3.select("#container").select("table").select("tbody").selectAll("tr")
         .data(data)
         .enter()
-        .append("tr");
-
-    // create a cell in each row for each column
-    var cells = rows.selectAll("td")
+        .append("tr")
+        .selectAll("td")
         .data(function(row) {
             return columns.map(function(column) {
+                console.log(row[column]);
                 return {column: column, value: row[column]};
             });
         })
         .enter()
         .append("td")
         .text(function(d) { return d.value; });
-    
-    return table;
+
+
+    // exit header info
+    d3.select("#container").select("table").select("thead").select("tr")
+        .selectAll("th")
+        .data(columns)
+        .exit()
+        .remove();
+
+    // exit row info
+//    rows.selectAll("tr")
+//        .data(data)
+//        .exit()
+//        .remove(); 
+
 }
+
+
+function list(data) {
+  d3.select('body').selectAll('p')
+    .data(data)
+    .enter()
+    .append('p');
+
+
+  d3.select('body').selectAll('p')
+    .data(data)
+    .text(function(d) {
+      return d;
+    });
+
+  d3.select('body').selectAll('p')
+    .data(data)
+    .exit()
+    .remove();
+}
+
