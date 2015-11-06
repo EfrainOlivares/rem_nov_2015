@@ -68,3 +68,26 @@ function list(data) {
     .remove();
 }
 
+
+function simple_table(data, headers) {
+  d3.select('body').select('table').select('thead').select('tr').selectAll('td')
+    .data(data)
+    .enter()
+    .append('td');
+ 
+  d3.select('body').select('table').select('thead').select('tr').selectAll('td')
+    .data(data)
+    .text(function(d) {
+      return d;
+    });
+
+  d3.select('body').select('table').select('thead').select('tr').selectAll('td')
+    .data(data)
+    .exit()
+    .remove();
+}
+
+
+
+
+
