@@ -22,6 +22,7 @@
     </script> 
 </head>
 <body>
+  <table></table>
 <script>
     function render() {
         parsedjson = JSON.parse(loadjson());
@@ -40,13 +41,13 @@
         ];
     
         // create table
-        var table = d3.select('body')
-            .append('table');
+        var table = d3.select('body').selectAll('table');
     
         // create table header
-        table.append('thead').append('tr')
+        table.selectAll('thead').selectAll('tr')
             .selectAll('th')
-            .data(columns).enter()
+            .data(columns)
+            .enter()
             .append('th')
             .attr('class', ƒ('cl'))
             .text(ƒ('head'));
@@ -70,6 +71,12 @@
             .append('td')
             .html(ƒ('html'))
             .attr('class', ƒ('cl'));
+
+        table.selectAll('thead').selectAll('tr')
+            .selectAll('th')
+            .data(columns)
+            .exit()
+            .remove();
     
         function length() {
             var fmt = d3.format('02d');
@@ -79,7 +86,7 @@
     } //end of render
     setInterval(function () {
         render();
-    }, 2500);
+    }, 15000);
 
     render();
 

@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>AJAX comes to RocketMonkey</title>
+    <script type="text/javascript" src="http://d3js.org/d3.v3.min.js"></script>
+    <script type="text/javascript" src="https://code.jquery.com/jquery-2.1.4.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/3.10.1/lodash.js"></script>
+    <script type="text/javascript" src="../rsreports.js"></script>
+    <script>
+      function loadjson()
+      {
+        return $.ajax({url: "http://rem2015.efrain.biz:8080/api/json?pretty=true", async: false}).responseText
+      }
+    </script>
+    <style>
+      td, th {
+          padding: 2px 4px;
+      }
+      
+      th {
+          font-weight: bold;
+      }
+    </style>
+</head>
+
+<body>
+<div id="container"></div>
+<script type="text/javascript">
+    function render() {
+        parsedjson = JSON.parse(loadjson());
+        jobs_list = parsedjson["jobs"];
+        new_jobs_list = remove_destroyers(jobs_list);
+
+// CODE HERE vv
+        // create some people
+        var people = [
+            {name: "Jill", age: 30},
+            {name: "Bob", age: 32},
+            {name: "George", age: 29},
+            {name: "Sally", age: 31}
+        ];
+        var peopleTable = tabulate(people, ["name", "age"]);
+
+
+    } // end render function
+
+
+    setInterval(function () {
+        render();
+    }, 2500);
+
+    render();
+</script>
+
+</body>
+
+</html>
