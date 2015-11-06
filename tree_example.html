@@ -11,7 +11,7 @@
         //$.ajax({url: "http://173.255.114.32:8080/api/python?pretty=true"}).then(function(response){
         //  console.log("AAA", response)
         //});
-        return $.ajax({url: "http://104.197.95.37:8080/api/json?pretty=true", async: false}).responseText
+        return $.ajax({url: "http://104.154.75.139:8080/api/json?pretty=true", async: false}).responseText
       }
     </script>
     
@@ -38,6 +38,7 @@
 //  })
 
   
+ //  ignore this data, just an example
   var sample_data = [
     {"value": 100, "name": "alpha", "group": "group 1"},
     {"value": 70, "name": "beta", "group": "group 2"},
@@ -49,38 +50,48 @@
 
 
   var aws_pass = 0;
+  var aws_fail = 0;
+ 
   var gce_pass = 0;
+  var gce_fail = 0;
+  
   var ost_pass = 0;
+  var ost_fail = 0;
+  
   var vsc_pass = 0;
- console.log("Data length: is " + data.length); 
+  var vsc_fail = 0;
+
+console.log("Data length: is " + data.length); 
   for (i = 0; i < data.length; i++) {
-      console.log(data[i]["name"]);
-      console.log(data[i]["color"]);
-    if (        data[i]["name"].match(/AWS/) && data[i]["color"].match(/blue/) ) {
-      aws_pass = aws_pass + 1;
-    } else if ( data[i]["name"].match(/GCE/) && data[i]["color"].match(/blue/) ) {
-      gce_pass = gce_pass + 1;
-    } else if ( data[i]["name"].match(/OST/) && data[i]["color"].match(/blue/) ) {
-      ost_pass = ost_pass + 1;
-    } else if ( data[i]["name"].match(/VSC/) && data[i]["color"].match(/blue/) ) {
-      vsc_pass = vsc_pass + 1;
+    if (data[i]["name"].match(/AWS/)) {
+      data[i]["color"].match(/blue/) ? aws_pass++ : aws_fail++;
+    } else if ( data[i]["name"].match(/Google/) ) {
+      data[i]["color"].match(/blue/) ? gce_pass++ : gce_fail++;
+    } else if ( data[i]["name"].match(/OST/) ) {
+      data[i]["color"].match(/blue/) ? ost_pass++ : ost_fail++;
+    } else if ( data[i]["name"].match(/VScale/) ) {
+      data[i]["color"].match(/blue/) ? vsc_pass++ : vsc_fail++;
     }
   }
 
   var data2 = [
     {"value": aws_pass, "name": "Amazon", "group": "group 1"},
-    {"value": gce_pass, "name": "Google", "group": "group 2"},
-    {"value": ost_pass, "name": "OST Juno", "group": "group 2"},
-    {"value": vsc_pass, "name": "VScale v5.5", "group": "group 2"}
-  ]
+    {"value": gce_pass, "name": "Google", "group": "group 1"},
+    {"value": ost_pass, "name": "Juno", "group": "group 1"},
+    {"value": vsc_pass, "name": "VScale", "group": "group 1"},
+    {"value": aws_fail, "name": "Amazon Fail", "group": "group 2"},
+    {"value": gce_fail, "name": "Google Fail", "group": "group 2"},
+    {"value": ost_fail, "name": "Juno Fail", "group": "group 2"},
+    {"value": vsc_fail, "name": "VScale Fail", "group": "group 2"}  
+]
 
   var visualization = d3plus.viz()
     .container("#viz")
     .data(data2)
     .type("tree_map")
-    //.id(["group","name"])
-    .id("name")
-    .depth(1)
+    .id(["group","name"])
+    //.id("name")
+    .depth(2)
     .size("value")
     .draw()
 
