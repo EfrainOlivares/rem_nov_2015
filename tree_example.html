@@ -3,52 +3,29 @@
 <head>
 <script src="http://www.d3plus.org/js/d3.js"></script>
 <script src="http://www.d3plus.org/js/d3plus.js"></script>
-    <script type="text/javascript" src="https://code.jquery.com/jquery-2.1.4.js"></script>
-    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/3.10.1/lodash.js"></script>
-    <script>
-      function loadjson()
-      {
-        //$.ajax({url: "http://173.255.114.32:8080/api/python?pretty=true"}).then(function(response){
-        //  console.log("AAA", response)
-        //});
-        return $.ajax({url: "http://104.154.75.139:8080/api/json?pretty=true", async: false}).responseText
-      }
-    </script>
-    
-    </head>
-    <body>
+<script type="text/javascript" src="https://code.jquery.com/jquery-2.1.4.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/3.10.1/lodash.js"></script>
+<script type="text/javascript" src="rsreports.js"></script>
+<script>
+  function loadjson()
+  {
+    return $.ajax({url: "http://104.154.75.139:8080/api/json?pretty=true", async: false}).responseText
+  }
+</script>
+
+</head>
+<body>
+
 <div id="viz"></div>
 
 <script>
-        parsedjson = JSON.parse(loadjson());
-        
-        jobs_list = parsedjson["jobs"];
-        console.log("Starting job length is: " + jobs_list.length);        
-        // Kick out destroyer jobs
-        new_jobs_list = _.reject(jobs_list, function(i) {
-          return i["name"].match(/^Z|000|^update_/);
-        }); 
-        console.log("Final jobs length is: " + new_jobs_list.length);
+  parsedjson = JSON.parse(loadjson());
+  jobs_list = parsedjson["jobs"]; 
+  
+  // Kick out destroyer jobs
+  new_jobs_list = remove_destroyers(jobs_list);
  
   var data = new_jobs_list;
-//  d3.json(json_url, function(error, json) {
-//    if (error) return console.warn(error);
-//    console.log("Sucessfully loaded json");
-//    data = json["jobs"];
-//  })
-
-  
- //  ignore this data, just an example
-  var sample_data = [
-    {"value": 100, "name": "alpha", "group": "group 1"},
-    {"value": 70, "name": "beta", "group": "group 2"},
-    {"value": 40, "name": "gamma", "group": "group 2"},
-    {"value": 15, "name": "delta", "group": "group 2"},
-    {"value": 5, "name": "epsilon", "group": "group 1"},
-    {"value": 1, "name": "zeta", "group": "group 1"}
-  ]
-
-
   var aws_pass = 0;
   var aws_fail = 0;
  
@@ -63,7 +40,7 @@
 
 console.log("Data length: is " + data.length); 
   for (i = 0; i < data.length; i++) {
-    if (data[i]["name"].match(/AWS/)) {
+    if ( data[i]["name"].match(/AWS/)) {
       data[i]["color"].match(/blue/) ? aws_pass++ : aws_fail++;
     } else if ( data[i]["name"].match(/Google/) ) {
       data[i]["color"].match(/blue/) ? gce_pass++ : gce_fail++;
@@ -90,7 +67,6 @@ console.log("Data length: is " + data.length);
     .data(data2)
     .type("tree_map")
     .id(["group","name"])
-    //.id("name")
     .depth(2)
     .size("value")
     .draw()
