@@ -87,7 +87,28 @@ function simple_table(data, headers) {
     .remove();
 }
 
-
+function html_color(jenkins_color) {
+  var html_color = ''
+  switch(jenkins_color) {
+    case "red_anime":
+      html_color = 'lightred';
+      break;
+    case "blue_anime":
+      html_color = 'lightblue';
+      break;
+    case "notbuilt":
+      html_color = 'gray';
+      break;
+    case "blue": 
+      html_color = 'blue';
+      break;
+    case "red": 
+      html_color = 'red'; 
+      break;
+  }
+  return html_color;
+}
+ 
 
 
 

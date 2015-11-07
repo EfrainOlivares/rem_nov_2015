@@ -7,6 +7,7 @@
     <script type="text/javascript" src="https://code.jquery.com/jquery-2.1.4.js"></script>
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/3.10.1/lodash.js"></script>
     <script src="https://rawgit.com/gka/d3-jetpack/master/d3-jetpack.js"></script>
+    <script src="rsreports.js"></script>
     <style type="text/css">
     body { font-family: 'Helvetica Neue', Helvetica; font-weight: 300; padding: 20px;}
     th { text-align: left; }
@@ -14,25 +15,19 @@
     th.center, td.center { text-align: center; }
     th.num, td.num { text-align: right; }
     </style>
-    <script>
-      function loadjson()
-      {
-        return $.ajax({url: "http://rem2015.efrain.biz:8080/api/json?pretty=true", async: false}).responseText
-      }
-    </script> 
 </head>
 <body>
   <table></table>
 <script>
-    function render() {
-        parsedjson = JSON.parse(loadjson());
-        
-        jobs_list = parsedjson["jobs"];
-        //console.log("Starting job length is: " + jobs_list.length);        
-        // Kick out destroyer jobs
-        movies = _.reject(jobs_list, function(i) {
-          return i["name"].match(/^Z|000|^update_/);
-        }); 
+      d3.json("http://rem2015.efrain.biz:8080/api/json?pretty=true", function(error, json) {
+          if (error) return console.warn(error);
+          firstload(json);
+      });
+ 
+      function firstload(parsedjson) {
+        all_jobs_list = parsedjson["jobs"];
+
+        jobs_list = remove_destroyers(all_jobs_list);
      
         // column definitions
         var columns = [
@@ -55,7 +50,7 @@
         // create table body
         table.append('tbody')
             .selectAll('tr')
-            .data(movies).enter()
+            .data(jobs_list).enter()
             .append('tr')
             .selectAll('td')
             .data(function(row, i) {
@@ -70,25 +65,34 @@
             }).enter()
             .append('td')
             .html(ƒ('html'))
+            .attr('id', ƒ('html'))
             .attr('class', ƒ('cl'));
+    }
 
-        table.selectAll('thead').selectAll('tr')
-            .selectAll('th')
-            .data(columns)
-            .exit()
-            .remove();
-    
-        function length() {
-            var fmt = d3.format('02d');
-            return function(l) { return Math.floor(l / 60) + ':' + fmt(l % 60) + ''; };
-        }
-    
-    } //end of render
+    function render(parsedjson) {
+        
+        all_jobs_list = parsedjson["jobs"];
+
+        jobs_list = remove_destroyers(all_jobs_list);
+ 
+        console.log( html_color(jobs_list[0]["color"]) );
+        for (i = 0; i < jobs_list.length; i++) {
+          d3.select('#' + jobs_list[i]["name"])
+            .style('color', html_color(jobs_list[i]["color"]));
+        } 
+    }
+
+    function reload() {
+      d3.json("http://rem2015.efrain.biz:8080/api/json?pretty=true", function(error, json) {
+          if (error) return console.warn(error);
+          render(json);
+      });
+    }
     setInterval(function () {
-        render();
+        reload();
     }, 15000);
 
-    render();
+    reload();
 
     </script>
 </body>
