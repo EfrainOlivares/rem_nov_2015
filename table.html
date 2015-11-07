@@ -75,7 +75,6 @@
 
         jobs_list = remove_destroyers(all_jobs_list);
  
-        console.log( html_color(jobs_list[0]["color"]) );
         for (i = 0; i < jobs_list.length; i++) {
           d3.select('#' + jobs_list[i]["name"])
             .style('color', html_color(jobs_list[i]["color"]));
